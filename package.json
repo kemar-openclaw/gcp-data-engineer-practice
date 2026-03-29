@@ -1,0 +1,24 @@
+{
+  "name": "gcp-data-engineer-practice",
+  "version": "1.0.0",
+  "description": "Interactive web-based practice exams for Google Cloud Professional certifications. Built with vanilla JavaScript - no frameworks, no dependencies.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kemar-openclaw/gcp-data-engineer-practice.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kemar-openclaw/gcp-data-engineer-practice/issues"
+  },
+  "homepage": "https://github.com/kemar-openclaw/gcp-data-engineer-practice#readme",
+  "devDependencies": {
+    "vercel": "^50.37.3"
+  }
+}
