@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GCP Professional Data Engineer Practice Exam</title>
+    <title>GCP Certification Practice Exams</title>
     <style>
         * {
             margin: 0;
@@ -40,6 +40,88 @@
             opacity: 0.9;
         }
         
+        .exam-selector {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .exam-selector h2 {
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+
+        .exam-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .exam-card {
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .exam-card:hover {
+            border-color: #667eea;
+            background: #f9fafb;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .exam-card.selected {
+            border-color: #667eea;
+            background: #eef2ff;
+        }
+
+        .exam-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .exam-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        .exam-count {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .start-btn:hover:not(:disabled) {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .start-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
         .controls {
             background: white;
             padding: 20px;
@@ -81,6 +163,15 @@
         .btn-secondary:hover {
             background: #e5e7eb;
         }
+
+        .btn-back {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background: #4b5563;
+        }
         
         .stats {
             display: flex;
@@ -118,6 +209,15 @@
         .question-number {
             font-size: 0.9rem;
             color: #667eea;
+            font-weight: 600;
+        }
+
+        .exam-badge {
+            padding: 5px 12px;
+            background: #eef2ff;
+            color: #667eea;
+            border-radius: 6px;
+            font-size: 0.85rem;
             font-weight: 600;
         }
         
@@ -237,12 +337,6 @@
             padding: 40px;
         }
         
-        .navigation {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
         .progress-bar {
             width: 100%;
             height: 8px;
@@ -343,41 +437,83 @@
             color: #6b7280;
             font-size: 0.9rem;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎓 GCP Data Engineer Practice</h1>
-            <p>Professional Data Engineer Certification Practice</p>
+            <h1>🎓 GCP Certification Practice</h1>
+            <p>Professional Certification Exam Practice</p>
         </div>
 
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressBar"></div>
-        </div>
-
-        <div class="controls">
-            <div class="mode-selector">
-                <button id="practiceMode" class="active">Practice Mode</button>
-                <button id="examMode">Exam Mode</button>
-            </div>
-            <button class="btn-primary" id="nextBtn">Next Question</button>
-            <button class="btn-secondary" id="shuffleBtn">Shuffle</button>
-            <button class="btn-secondary" id="resetBtn">Reset</button>
-            <div class="stats">
-                <div class="stat">
-                    Question: <strong><span id="currentQ">0</span>/<span id="totalQ">0</span></strong>
+        <!-- Exam Selection Screen -->
+        <div id="examSelection" class="exam-selector">
+            <h2>Select Your Exam</h2>
+            <div class="exam-list">
+                <div class="exam-card" data-exam="data-engineer" onclick="selectExam('data-engineer')">
+                    <div class="exam-icon">💾</div>
+                    <div class="exam-title">Professional Data Engineer</div>
+                    <div class="exam-count" id="count-data-engineer">Loading...</div>
                 </div>
-                <div class="stat">
-                    Score: <strong><span id="score">0</span>/<span id="attempted">0</span></strong>
+                <div class="exam-card" data-exam="cloud-architect" onclick="selectExam('cloud-architect')">
+                    <div class="exam-icon">🏗️</div>
+                    <div class="exam-title">Professional Cloud Architect</div>
+                    <div class="exam-count" id="count-cloud-architect">Loading...</div>
                 </div>
             </div>
+            <button class="start-btn" id="startExamBtn" onclick="startExam()" disabled>
+                Start Practice Exam
+            </button>
         </div>
 
-        <div id="questionContainer"></div>
+        <!-- Exam Screen -->
+        <div id="examScreen" class="hidden">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+
+            <div class="controls">
+                <button class="btn-back" onclick="backToSelection()">← Back</button>
+                <div class="mode-selector">
+                    <button id="practiceMode" class="active">Practice Mode</button>
+                    <button id="examMode">Exam Mode</button>
+                </div>
+                <button class="btn-primary" id="nextBtn">Next Question</button>
+                <button class="btn-secondary" id="shuffleBtn">Shuffle</button>
+                <button class="btn-secondary" id="resetBtn">Reset</button>
+                <div class="stats">
+                    <div class="stat">
+                        Question: <strong><span id="currentQ">0</span>/<span id="totalQ">0</span></strong>
+                    </div>
+                    <div class="stat">
+                        Score: <strong><span id="score">0</span>/<span id="attempted">0</span></strong>
+                    </div>
+                </div>
+            </div>
+
+            <div id="questionContainer"></div>
+        </div>
     </div>
 
     <script>
+        const EXAMS = {
+            'data-engineer': {
+                name: 'Professional Data Engineer',
+                file: 'data/data-engineer.json',
+                icon: '💾'
+            },
+            'cloud-architect': {
+                name: 'Professional Cloud Architect',
+                file: 'data/cloud-architect.json',
+                icon: '🏗️'
+            }
+        };
+
+        let currentExam = null;
         let questions = [];
         let currentQuestionIndex = 0;
         let score = 0;
@@ -385,22 +521,70 @@
         let selectedAnswer = null;
         let answered = false;
         let isPracticeMode = true;
+        let selectedExamId = null;
 
-        async function loadQuestions() {
+        // Load question counts for all exams
+        async function loadExamCounts() {
+            for (const [id, exam] of Object.entries(EXAMS)) {
+                try {
+                    const response = await fetch(exam.file);
+                    const data = await response.json();
+                    document.getElementById(`count-${id}`).textContent = `${data.length} questions`;
+                } catch (error) {
+                    document.getElementById(`count-${id}`).textContent = 'Not available';
+                    document.querySelector(`[data-exam="${id}"]`).style.opacity = '0.5';
+                    document.querySelector(`[data-exam="${id}"]`).style.cursor = 'not-allowed';
+                }
+            }
+        }
+
+        function selectExam(examId) {
+            // Check if exam is available
+            const countText = document.getElementById(`count-${examId}`).textContent;
+            if (countText === 'Not available') return;
+
+            // Update selection
+            document.querySelectorAll('.exam-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-exam="${examId}"]`).classList.add('selected');
+            selectedExamId = examId;
+            document.getElementById('startExamBtn').disabled = false;
+        }
+
+        async function startExam() {
+            if (!selectedExamId) return;
+
+            currentExam = EXAMS[selectedExamId];
+            
             try {
-                const response = await fetch('questions.json');
+                const response = await fetch(currentExam.file);
                 questions = await response.json();
+                
+                // Hide selection, show exam
+                document.getElementById('examSelection').classList.add('hidden');
+                document.getElementById('examScreen').classList.remove('hidden');
+                
                 shuffleQuestions();
                 renderQuestion();
                 updateStats();
             } catch (error) {
-                document.getElementById('questionContainer').innerHTML = 
-                    '<div class="loading">Error loading questions. Make sure questions.json exists!</div>';
+                alert('Error loading exam questions. Please try again.');
+            }
+        }
+
+        function backToSelection() {
+            if (confirm('Are you sure you want to go back? Your progress will be lost.')) {
+                document.getElementById('examScreen').classList.add('hidden');
+                document.getElementById('examSelection').classList.remove('hidden');
+                currentQuestionIndex = 0;
+                score = 0;
+                attempted = 0;
+                questions = [];
             }
         }
 
         function parseMarkdown(text) {
-            // Remove markdown formatting for cleaner display
             return text
                 .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\*(.+?)\*/g, '<em>$1</em>')
@@ -430,6 +614,7 @@
                 <div class="question-card">
                     <div class="question-header">
                         <span class="question-number">Question ${currentQuestionIndex + 1} of ${questions.length}</span>
+                        <span class="exam-badge">${currentExam.icon} ${currentExam.name}</span>
                     </div>
                     <div class="question-text">${parseMarkdown(question.question)}</div>
                     <div class="options">
@@ -533,6 +718,9 @@
             container.innerHTML = `
                 <div class="results-card">
                     <h2>🎉 Exam Complete!</h2>
+                    <div class="exam-badge" style="display: inline-block; margin-bottom: 20px;">
+                        ${currentExam.icon} ${currentExam.name}
+                    </div>
                     <div class="score-circle ${passed ? 'pass' : 'fail'}">
                         ${percentage}%
                     </div>
@@ -592,8 +780,8 @@
             renderQuestion();
         });
 
-        // Load questions on page load
-        loadQuestions();
+        // Load counts on page load
+        loadExamCounts();
     </script>
 </body>
 </html>
