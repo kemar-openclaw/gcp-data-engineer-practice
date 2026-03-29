@@ -464,6 +464,11 @@
                     <div class="exam-title">Professional Cloud Architect</div>
                     <div class="exam-count" id="count-cloud-architect">Loading...</div>
                 </div>
+                <div class="exam-card" data-exam="machine-learning" onclick="selectExam('machine-learning')">
+                    <div class="exam-icon">🤖</div>
+                    <div class="exam-title">Professional ML Engineer</div>
+                    <div class="exam-count" id="count-machine-learning">Loading...</div>
+                </div>
             </div>
             <button class="start-btn" id="startExamBtn" onclick="startExam()" disabled>
                 Start Practice Exam
@@ -510,6 +515,11 @@
                 name: 'Professional Cloud Architect',
                 file: 'data/cloud-architect.json',
                 icon: '🏗️'
+            },
+            'machine-learning': {
+                name: 'Professional ML Engineer',
+                file: 'data/machine-learning.json',
+                icon: '🤖'
             }
         };
 
