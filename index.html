@@ -681,8 +681,11 @@
                 ${isCorrect ? 'Great job!' : `The correct answer is ${question.answer}`}
             `;
 
-            // Show the correct answer and discussion link after answering
-            document.getElementById('questionMeta').style.display = 'block';
+            // Only show question meta (discussion link) if we are in practice mode,
+            // or if we are in exam mode and just checked the answer
+            if (isPracticeMode || answered) {
+                document.getElementById('questionMeta').style.display = 'block';
+            }
 
             updateStats();
         }
