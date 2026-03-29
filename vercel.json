@@ -1,0 +1,5 @@
+{
+  "buildCommand": "echo 'Done'",
+  "outputDirectory": ".",
+  "installCommand": "echo 'None'"
+}

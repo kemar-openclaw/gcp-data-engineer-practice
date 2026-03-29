@@ -2,6 +2,7 @@
   "name": "gcp-practice",
   "version": "1.0.0",
   "scripts": {
-    "build": "echo 'No build required for static site'"
+    "build": "echo 'Done'",
+    "start": "http-server -p $PORT"
   }
 }
