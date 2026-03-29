@@ -626,9 +626,9 @@
                         `).join('')}
                     </div>
                     <div class="answer-feedback" id="feedback"></div>
-                    <div class="question-meta">
+                    <div class="question-meta" id="questionMeta" style="display: none;">
                         <div>Correct Answer: <strong>${question.answer}</strong> | 
-                        <a href="${question.link}" target="_blank">View Discussion</a></div>
+                        <a href="${question.link}" target="_blank">View Discussion ↗</a></div>
                     </div>
                 </div>
             `;
@@ -680,6 +680,9 @@
                 <strong>${isCorrect ? '✓ Correct!' : '✗ Incorrect'}</strong>
                 ${isCorrect ? 'Great job!' : `The correct answer is ${question.answer}`}
             `;
+
+            // Show the correct answer and discussion link after answering
+            document.getElementById('questionMeta').style.display = 'block';
 
             updateStats();
         }
